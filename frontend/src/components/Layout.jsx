@@ -1,11 +1,32 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext.jsx';
 
 export function Layout({ children, crumbs }) {
+  const { user, logout } = useAuth();
+  const nav = useNavigate();
+
   return (
     <div className="app">
       <header className="app-header">
         <h1><Link to="/" style={{ color: 'inherit' }}>OpsConsole</Link></h1>
         <span className="subtitle">멀티 서비스 운영 콘솔 — P0 카탈로그</span>
+        <div style={{ marginLeft: 'auto', fontSize: 13 }}>
+          {user ? (
+            <>
+              <span className="muted">{user.email}</span>{' '}
+              <span className="tag">{user.role}</span>{' '}
+              <button
+                className="btn"
+                style={{ marginLeft: 8 }}
+                onClick={() => { logout(); nav('/login'); }}
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <Link className="btn" to="/login">로그인</Link>
+          )}
+        </div>
       </header>
       {crumbs && <Crumbs items={crumbs} />}
       {children}

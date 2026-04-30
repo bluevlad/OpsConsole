@@ -2,9 +2,10 @@
 
 운영자/섹션 담당자가 코드 변경 없이 멀티 서비스의 섹션 메타데이터·콘텐츠·헬스·변경요청을 관리하는 **Internal Developer Portal (IDP)**.
 
-> 🟡 **상태**: P0 부트스트랩 진행 중 (코드 저장소 신규 등록).
-> 1호 고객: AllergyInsight (`allergy.unmong.com`).
-> 전략·플랜·ADR 정본은 [`Claude-Opus-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/services/opsconsole) (private repo).
+> 🟢 **상태**: P0 (Foundation) 완료 — 카탈로그 read-only UI · 매니페스트 sync · Google OAuth.
+> 운영 도메인: https://opsconsole.unmong.com
+> 1호 고객: AllergyInsight (`allergy.unmong.com`) — 11섹션 카탈로그 가동 중.
+> 전략·플랜·ADR 정본: [`Claude-Opus-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/services/opsconsole) (private).
 
 ---
 
@@ -83,7 +84,7 @@ OpsConsole/
 
 | Phase | 내용 | 상태 |
 |-------|------|------|
-| **P0** | 카탈로그 + 자동 스캔 + 웹 읽기전용 대시보드 | 🟡 진행 중 |
+| **P0** | 카탈로그 + 자동 스캔 + 웹 읽기전용 대시보드 + Google OAuth | ✅ 완료 |
 | **P1** | 담당자 지정 + 헬스 모니터링 + 알림 | 📋 계획 |
 | **P2** | GitHub Bridge (Issue/PR 자동) | 📋 계획 |
 | **P3** | 콘텐츠 블록 에디터 | 📋 계획 |
