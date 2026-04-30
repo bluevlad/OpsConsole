@@ -143,3 +143,15 @@ export async function listVersions(blockId) {
   const { data } = await api.get(`/api/content/blocks/${blockId}/versions`);
   return data;
 }
+
+// -- P4: Device Code OAuth --------------------------------------------------
+
+export async function lookupDeviceCode(userCode) {
+  const { data } = await api.get('/api/auth/device/lookup', { params: { user_code: userCode } });
+  return data;
+}
+
+export async function approveDeviceCode(userCode) {
+  const { data } = await api.post('/api/auth/device/approve', { user_code: userCode });
+  return data;
+}

@@ -5,6 +5,7 @@
 from app.models.audit import OpsAuditLog, OpsManifestSnapshot
 from app.models.change_request import OpsChangeRequest, OpsChangeRequestEvent
 from app.models.content import OpsContentBlock, OpsContentBlockVersion
+from app.models.device_code import OpsDeviceCode
 from app.models.health import OpsAlertState, OpsHealthSnapshot
 from app.models.permission import OpsSectionPermission
 from app.models.section import OpsSection, OpsSectionAsset
@@ -18,6 +19,7 @@ __all__ = [
     "OpsChangeRequestEvent",
     "OpsContentBlock",
     "OpsContentBlockVersion",
+    "OpsDeviceCode",
     "OpsHealthSnapshot",
     "OpsManifestSnapshot",
     "OpsSection",

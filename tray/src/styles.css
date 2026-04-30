@@ -1,0 +1,57 @@
+:root {
+  --bg: #0f1115;
+  --panel: #161922;
+  --panel-2: #1d2230;
+  --border: #2a2f3d;
+  --text: #e7e9ee;
+  --muted: #8a90a3;
+  --accent: #5b8bff;
+  --ok: #3ec78d;
+  --warn: #e7a948;
+  --err: #e25b5b;
+  --code-bg: #0b0d12;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  background: var(--bg); color: var(--text);
+  font-size: 13.5px;
+}
+.tray-app { padding: 12px 14px; }
+.tabs {
+  display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 12px;
+}
+.tabs button {
+  background: transparent; border: 0; color: var(--muted);
+  padding: 8px 12px; cursor: pointer; font-size: 13px;
+  border-bottom: 2px solid transparent;
+}
+.tabs button.active { color: var(--text); border-bottom-color: var(--accent); }
+.btn {
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 6px 10px; font-size: 13px; cursor: pointer;
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.muted { color: var(--muted); }
+.error { background: rgba(226,91,91,0.1); border: 1px solid rgba(226,91,91,0.4); padding: 8px 10px; border-radius: 6px; font-size: 12px; color: #f0a8a8; }
+
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); margin-right: 6px; vertical-align: middle; }
+.dot.ok { background: var(--ok); } .dot.warn { background: var(--warn); } .dot.err { background: var(--err); }
+
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+.row { display: flex; align-items: baseline; gap: 8px; }
+input, textarea, select {
+  background: var(--code-bg); color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 8px; font-size: 13px; width: 100%;
+}
+textarea { font-family: ui-monospace, monospace; min-height: 80px; resize: vertical; }
+.kvpair { display: grid; grid-template-columns: 100px 1fr; gap: 4px 8px; font-size: 12.5px; margin-bottom: 8px; }
+.kvpair dt { color: var(--muted); margin: 0; } .kvpair dd { margin: 0; }
+.code-display {
+  font-family: ui-monospace, monospace; font-size: 22px; letter-spacing: 4px;
+  background: var(--code-bg); padding: 14px; text-align: center; border-radius: 6px; border: 1px solid var(--border);
+  margin: 12px 0;
+}

@@ -17,6 +17,7 @@ async def _truncate_all() -> None:
     engine = create_async_engine(settings.database_url, echo=False)
     async with engine.begin() as conn:
         # 자식 → 부모 순서 (CASCADE 가 없는 FK 도 안전하게)
+        await conn.execute(text("DELETE FROM ops_device_codes"))
         await conn.execute(text("DELETE FROM ops_content_block_versions"))
         await conn.execute(text("DELETE FROM ops_content_blocks"))
         await conn.execute(text("DELETE FROM ops_change_request_events"))

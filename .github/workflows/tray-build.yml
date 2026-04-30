@@ -1,0 +1,102 @@
+name: Tray Build
+
+on:
+  push:
+    tags:
+      - "tray-v*"
+  workflow_dispatch:
+
+jobs:
+  build-tauri:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { os: macos-latest, target: aarch64-apple-darwin, label: macos-arm64 }
+          - { os: macos-latest, target: x86_64-apple-darwin, label: macos-x64 }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc, label: windows-x64 }
+
+    runs-on: ${{ matrix.platform.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: tray/package.json
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform.target }}
+
+      - name: Cache Cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            tray/src-tauri/target
+          key: ${{ matrix.platform.label }}-cargo-${{ hashFiles('tray/src-tauri/Cargo.lock') }}
+
+      - name: Install frontend deps
+        working-directory: tray
+        run: npm install
+
+      # ------- macOS Code Signing (선택) -------
+      # 인증서가 GitHub Secrets 에 등록된 경우에만 서명 빌드.
+      # 미설정 시: ad-hoc unsigned 빌드 (배포 불가, 내부 검증용).
+      - name: Import Apple Developer Cert
+        if: matrix.platform.os == 'macos-latest' && env.APPLE_CERT_BASE64 != ''
+        env:
+          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
+          APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+        run: |
+          echo "$APPLE_CERT_BASE64" | base64 --decode > cert.p12
+          security create-keychain -p actions build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p actions build.keychain
+          security import cert.p12 -k build.keychain -P "$APPLE_CERT_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k actions build.keychain
+          rm cert.p12
+
+      # ------- Windows Code Signing (선택) -------
+      # signtool.exe 가 자동 등록된 경우만. EV cert는 토큰/HSM 기반이라 별도 절차.
+
+      - name: Build (Tauri 2)
+        working-directory: tray
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: npx tauri build --target ${{ matrix.platform.target }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: opsconsole-tray-${{ matrix.platform.label }}
+          path: |
+            tray/src-tauri/target/${{ matrix.platform.target }}/release/bundle/dmg/*.dmg
+            tray/src-tauri/target/${{ matrix.platform.target }}/release/bundle/msi/*.msi
+            tray/src-tauri/target/${{ matrix.platform.target }}/release/bundle/macos/*.app
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/tray-v')
+    needs: build-tauri
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: artifacts }
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          files: artifacts/**/*
+          generate_release_notes: true

@@ -3,6 +3,7 @@ import { AuthProvider } from './auth/AuthContext.jsx';
 import { RequireAuth } from './auth/RequireAuth.jsx';
 import ChangeRequestDetailPage from './pages/ChangeRequestDetailPage.jsx';
 import ChangeRequestNewPage from './pages/ChangeRequestNewPage.jsx';
+import DeviceApprovalPage from './pages/DeviceApprovalPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import MyChangeRequestsPage from './pages/MyChangeRequestsPage.jsx';
@@ -19,6 +20,10 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/device"
+          element={<RequireAuth><DeviceApprovalPage /></RequireAuth>}
+        />
         <Route
           path="/my/sections"
           element={<RequireAuth><MySectionsPage /></RequireAuth>}
