@@ -1,16 +1,25 @@
 """Pydantic Settings — 12-factor 환경변수 기반 설정.
 
 P0 §0: 최소 항목만. JWT/OAuth/GitHub/Slack는 §2~P2 단계에서 활성화.
+
+.env 검색 위치 (우선순위):
+1. 프로젝트 루트의 .env (uvicorn / docker / alembic 모두 동일하게 인식)
+2. backend/.env (backend 단독 실행 시)
 """
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# config.py = backend/app/core/config.py → 프로젝트 루트는 3단계 상위
+_PROJECT_ROOT = Path(__file__).resolve().parents[3]
+_ENV_FILES = (str(_PROJECT_ROOT / ".env"), str(_PROJECT_ROOT / "backend" / ".env"))
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=_ENV_FILES,
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
