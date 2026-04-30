@@ -14,6 +14,7 @@
 
 ## 주요 문서
 
-- [dev/quickstart.md](./dev/quickstart.md) — 로컬에서 OpsConsole 띄우기 (P0 §4)
+- [dev/quickstart.md](./dev/quickstart.md) — 로컬에서 OpsConsole 띄우기 (Docker compose / 호스트 직접 실행 / 시드 / 트러블슈팅)
+- [dev/database-setup.md](./dev/database-setup.md) — 공유 PostgreSQL에 `opsconsole`/`opsconsole_dev` DB·계정·pg_hba 항목 생성
+- [dev/database-init.sql](./dev/database-init.sql) — 멱등 SQL (DB·계정·권한)
 - (예정) `api/manifest-sync.md` — POST /api/catalog/sync 사용법
-- (예정) `dev/database-setup.md` — 공유 PostgreSQL에 `opsconsole_dev` DB 만드는 법

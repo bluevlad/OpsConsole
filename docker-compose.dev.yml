@@ -1,6 +1,6 @@
 # OpsConsole — local dev compose (hot reload)
 # 백엔드: uvicorn --reload, 프런트: vite dev server
-version: "3.9"
+# 공유 PostgreSQL(database-services)에 'database-network'로 접속 — DATABASE_URL의 host=postgresql
 
 services:
   opsconsole-backend:
@@ -11,24 +11,45 @@ services:
     environment:
       APP_ENV: dev
       APP_DEBUG: "true"
+      # 컨테이너 내부에서는 host=postgresql (.env의 localhost를 덮어씀)
+      DATABASE_URL: postgresql+asyncpg://opsconsole_svc:dnflskfk@postgresql:5432/opsconsole_dev
+      PYTHONUNBUFFERED: "1"
     volumes:
       - ./backend:/app
+      - opsconsole-pip-cache:/root/.cache/pip
     command: >
       sh -c "pip install -r requirements.txt &&
+             alembic upgrade head &&
              uvicorn app.main:app --host 0.0.0.0 --port 9100 --reload"
     ports:
       - "9100:9100"
+    networks:
+      - database-network
 
   opsconsole-frontend:
     image: node:20-alpine
     container_name: opsconsole-frontend-dev
     working_dir: /app
     environment:
-      VITE_API_BASE_URL: http://localhost:9100
+      # 브라우저가 axios baseURL로 사용 — 빈 값이면 same-origin 상대 경로 (vite proxy 경유)
+      VITE_API_BASE_URL: ""
+      # vite dev server 의 /api proxy target — 컨테이너 DNS 사용
+      VITE_PROXY_TARGET: http://opsconsole-backend:9100
     volumes:
       - ./frontend:/app
-    command: sh -c "npm install && npm run dev"
+      - opsconsole-node-modules:/app/node_modules
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
     ports:
       - "4100:4100"
     depends_on:
       - opsconsole-backend
+    networks:
+      - database-network
+
+volumes:
+  opsconsole-pip-cache:
+  opsconsole-node-modules:
+
+networks:
+  database-network:
+    external: true
