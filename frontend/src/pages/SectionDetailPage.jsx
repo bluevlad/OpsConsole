@@ -100,6 +100,15 @@ export default function SectionDetailPage() {
 
           <HealthSummaryCard summary={data.health} />
 
+          <div className="card">
+            <h2>콘텐츠 (P3)</h2>
+            <p className="muted" style={{ margin: 0 }}>
+              <Link to={`/services/${code}/sections/${section}/content`}>
+                → 매니페스트 화이트리스트의 텍스트 블록 편집·게시
+              </Link>
+            </p>
+          </div>
+
           {user?.role === 'ops_admin' && (
             <div className="card">
               <h2>권한 (ops_admin)</h2>

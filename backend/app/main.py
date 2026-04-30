@@ -9,9 +9,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.auth import router as auth_router
 from app.api.catalog import router as catalog_router
 from app.api.change_requests import router as change_requests_router
+from app.api.content import router as content_router
 from app.api.github_webhook import router as github_webhook_router
 from app.api.health import router as health_router
 from app.api.health_api import router as health_api_router
+from app.api.internal_content import router as internal_content_router
 from app.api.my import router as my_router
 from app.api.permissions import router as permissions_router
 from app.core.config import settings
@@ -51,6 +53,8 @@ def create_app() -> FastAPI:
     app.include_router(health_api_router, prefix="/api")
     app.include_router(change_requests_router, prefix="/api")
     app.include_router(github_webhook_router, prefix="/api")
+    app.include_router(content_router, prefix="/api")
+    app.include_router(internal_content_router, prefix="/api")
 
     return app
 

@@ -55,6 +55,9 @@ class Settings(BaseSettings):
     github_api_base: str = Field(default="https://api.github.com")
     github_webhook_secret: str = Field(default="")  # P2 webhook HMAC-SHA256 검증
 
+    # --- Internal content (P3) — 본 서비스 polling 인증 ---
+    ops_internal_token: str = Field(default="")  # 본 서비스가 X-Ops-Internal-Token 헤더로 사용
+
     # --- Slack (P1) ---
     slack_webhook_url: str = Field(default="")
 

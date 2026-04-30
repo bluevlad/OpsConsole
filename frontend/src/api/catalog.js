@@ -86,3 +86,60 @@ export async function patchChangeRequest(id, payload) {
   const { data } = await api.patch(`/api/change-requests/${id}`, payload);
   return data;
 }
+
+// -- P3: Content Blocks ----------------------------------------------------
+
+export async function listSectionBlocks(serviceCode, sectionCode, locale = 'ko') {
+  const { data } = await api.get(
+    `/api/content/sections/${encodeURIComponent(serviceCode)}/${encodeURIComponent(sectionCode)}/blocks`,
+    { params: { locale } },
+  );
+  return data;
+}
+
+export async function getContentBlock(blockId) {
+  const { data } = await api.get(`/api/content/blocks/${blockId}`);
+  return data;
+}
+
+export async function saveDraft(serviceCode, sectionCode, key, body, locale = 'ko') {
+  const { data } = await api.put(
+    `/api/content/sections/${encodeURIComponent(serviceCode)}/${encodeURIComponent(sectionCode)}/blocks/${encodeURIComponent(key)}/draft`,
+    { body, locale },
+  );
+  return data;
+}
+
+export async function requestReview(blockId, reviewerEmail) {
+  const { data } = await api.post(
+    `/api/content/blocks/${blockId}/request-review`,
+    reviewerEmail ? { reviewer_email: reviewerEmail } : {},
+  );
+  return data;
+}
+
+export async function approveBlock(blockId, note) {
+  const { data } = await api.post(
+    `/api/content/blocks/${blockId}/approve`,
+    note ? { note } : {},
+  );
+  return data;
+}
+
+export async function rejectBlock(blockId, note) {
+  const { data } = await api.post(
+    `/api/content/blocks/${blockId}/reject`,
+    note ? { note } : {},
+  );
+  return data;
+}
+
+export async function publishBlock(blockId) {
+  const { data } = await api.post(`/api/content/blocks/${blockId}/publish`);
+  return data;
+}
+
+export async function listVersions(blockId) {
+  const { data } = await api.get(`/api/content/blocks/${blockId}/versions`);
+  return data;
+}

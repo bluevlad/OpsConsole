@@ -189,5 +189,59 @@ class MySectionDTO(_OrmDTO):
     health: SectionHealthSummaryDTO | None = None
 
 
+# -- Content Blocks (P3) ---------------------------------------------------
+
+
+class ContentBlockSpecDTO(BaseModel):
+    """매니페스트 화이트리스트 항목 (편집 화면에서 max_length/locales 표시)."""
+
+    key: str
+    format: str
+    max_length: int
+    locales: list[str]
+    description: str | None = None
+
+
+class ContentBlockDTO(_OrmDTO):
+    id: int
+    section_id: int
+    section_code: str | None = None
+    service_code: str | None = None
+    key: str
+    locale: str
+    format: str
+    draft_body: str | None
+    draft_edited_by: int | None
+    draft_edited_at: datetime | None
+    published_body: str | None
+    published_version: int
+    published_by: int | None
+    published_at: datetime | None
+    status: str
+    reviewer_id: int | None
+    review_note: str | None
+    spec: ContentBlockSpecDTO | None = None
+
+
+class ContentBlockListItemDTO(BaseModel):
+    """매니페스트의 화이트리스트 + DB row 매칭 (없으면 block=None)."""
+
+    spec: ContentBlockSpecDTO
+    block: ContentBlockDTO | None = None
+
+
+class DraftSaveRequest(BaseModel):
+    body: str
+    locale: str = "ko"
+
+
+class ReviewRequest(BaseModel):
+    reviewer_email: EmailStr | None = None
+
+
+class ReviewDecisionRequest(BaseModel):
+    note: str | None = None
+
+
 # forward reference 해소
 SectionDTO.model_rebuild()

@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import MyChangeRequestsPage from './pages/MyChangeRequestsPage.jsx';
 import MySectionsPage from './pages/MySectionsPage.jsx';
 import PermissionsPage from './pages/PermissionsPage.jsx';
+import SectionContentPage from './pages/SectionContentPage.jsx';
 import SectionDetailPage from './pages/SectionDetailPage.jsx';
 import SectionsListPage from './pages/SectionsListPage.jsx';
 import ServicesListPage from './pages/ServicesListPage.jsx';
@@ -45,6 +46,10 @@ export default function App() {
         <Route
           path="/services/:code/sections/:section"
           element={<RequireAuth><SectionDetailPage /></RequireAuth>}
+        />
+        <Route
+          path="/services/:code/sections/:section/content"
+          element={<RequireAuth><SectionContentPage /></RequireAuth>}
         />
         <Route
           path="/services/:code/sections/:section/permissions"

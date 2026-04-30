@@ -13,12 +13,22 @@ from app.core.config import settings
 
 
 async def _truncate_all() -> None:
-    """opsconsole_dev의 OpsConsole 테이블 전체 비우기. CASCADE FK 활용."""
+    """opsconsole_dev의 OpsConsole 테이블 전체 비우기. FK 의존성 역순으로 삭제."""
     engine = create_async_engine(settings.database_url, echo=False)
     async with engine.begin() as conn:
+        # 자식 → 부모 순서 (CASCADE 가 없는 FK 도 안전하게)
+        await conn.execute(text("DELETE FROM ops_content_block_versions"))
+        await conn.execute(text("DELETE FROM ops_content_blocks"))
+        await conn.execute(text("DELETE FROM ops_change_request_events"))
+        await conn.execute(text("DELETE FROM ops_change_requests"))
+        await conn.execute(text("DELETE FROM ops_alert_state"))
+        await conn.execute(text("DELETE FROM ops_health_snapshots"))
+        await conn.execute(text("DELETE FROM ops_section_permissions"))
+        await conn.execute(text("DELETE FROM ops_section_assets"))
         await conn.execute(text("DELETE FROM ops_audit_log"))
         await conn.execute(text("DELETE FROM ops_manifest_snapshots"))
-        await conn.execute(text("DELETE FROM ops_services"))  # CASCADE → sections, assets
+        await conn.execute(text("DELETE FROM ops_sections"))
+        await conn.execute(text("DELETE FROM ops_services"))
         await conn.execute(text("DELETE FROM ops_users"))
     await engine.dispose()
 

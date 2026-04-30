@@ -14,6 +14,7 @@ from app.database.base import Base
 from app.models import (  # noqa: F401
     audit,
     change_request,
+    content,
     health,
     permission,
     section,
