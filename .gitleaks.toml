@@ -1,0 +1,27 @@
+# gitleaks 룰 — OpsConsole 커스텀 (운영 .env 패턴 + 익숙한 토큰 prefix)
+title = "OpsConsole gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "허용 false-positive"
+paths = [
+    '''(.*?)(jpg|jpeg|png|gif|ico|icns|p12|pem)$''',
+    '''docs/dev/.*\.md''',     # 가이드 문서 내 placeholder 토큰 ('CHANGE_ME', 'ghp_xxx' 등)
+    '''\.env\.example''',
+]
+regexes = [
+    '''CHANGE_ME[A-Z_]*''',
+    '''ghp_xxx+''',
+    '''p3-internal-token-test-not-for-prod''',
+    '''p2-webhook-test-secret-not-for-prod''',
+    '''dev-only-jwt-secret-replace-before-prod''',
+    '''dnflskfk''',  # 로컬 dev DB 비밀번호 (운영 아님)
+]
+
+[[rules]]
+description = "OpsConsole internal token"
+id = "ops-internal-token"
+regex = '''OPS_INTERNAL_TOKEN\s*=\s*[A-Za-z0-9_\-]{20,}'''
+secretGroup = 0

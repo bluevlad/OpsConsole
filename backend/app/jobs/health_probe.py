@@ -17,6 +17,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.core.config import settings
+from app.jobs.url_guard import UnsafeURLError, assert_safe_probe_url
 from app.manifest.parser import parse_manifest
 from app.manifest.schema import Section as ManifestSection
 from app.models.audit import OpsManifestSnapshot
@@ -134,6 +135,23 @@ async def probe_all_sections(db: AsyncSession) -> int:
                     continue
                 url = _resolve_url(svc, ms)
                 if not url:
+                    continue
+                # SSRF 방어 — 사설 IP / 잘못된 스킴 차단
+                try:
+                    assert_safe_probe_url(url)
+                except UnsafeURLError as e:
+                    snap = OpsHealthSnapshot(
+                        section_id=sec.id,
+                        http_status=None,
+                        latency_ms=0,
+                        ok=False,
+                        error_text=f"unsafe url: {e}",
+                    )
+                    db.add(snap)
+                    await db.flush()
+                    await evaluate_and_notify(db, svc, sec, snap)
+                    processed += 1
+                    log.warning("[probe] unsafe url skipped %s/%s: %s", svc.code, sec.code, e)
                     continue
                 method = ms.health.method if ms.health else "GET"
                 expected = ms.health.expected_status if ms.health else 200

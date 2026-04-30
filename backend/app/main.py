@@ -4,8 +4,8 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.audit import router as audit_router
 from app.api.auth import router as auth_router
 from app.api.catalog import router as catalog_router
 from app.api.change_requests import router as change_requests_router
@@ -17,7 +17,7 @@ from app.api.health_api import router as health_api_router
 from app.api.internal_content import router as internal_content_router
 from app.api.my import router as my_router
 from app.api.permissions import router as permissions_router
-from app.core.config import settings
+from app.core.security_headers import SecurityHeadersMiddleware, configure_cors
 from app.jobs.scheduler import start_scheduler, stop_scheduler
 
 
@@ -38,13 +38,9 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.cors_origins_list,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    # 보안 헤더 + 명시적 CORS (P5)
+    app.add_middleware(SecurityHeadersMiddleware)
+    configure_cors(app)
 
     app.include_router(health_router, prefix="/api")
     app.include_router(auth_router, prefix="/api")
@@ -57,6 +53,7 @@ def create_app() -> FastAPI:
     app.include_router(content_router, prefix="/api")
     app.include_router(internal_content_router, prefix="/api")
     app.include_router(device_auth_router, prefix="/api")
+    app.include_router(audit_router, prefix="/api")
 
     return app
 

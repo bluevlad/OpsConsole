@@ -102,14 +102,51 @@ async def get_current_user(
     return user
 
 
+# P5 — 역할 위계: admin > reviewer > member > viewer
+ROLE_RANK = {
+    "ops_viewer": 0,
+    "ops_member": 1,
+    "ops_reviewer": 2,
+    "ops_admin": 3,
+}
+VALID_ROLES = tuple(ROLE_RANK.keys())
+
+
+def role_at_least(user: OpsUser, minimum: str) -> bool:
+    return ROLE_RANK.get(user.role, -1) >= ROLE_RANK.get(minimum, 99)
+
+
 def require_role(*allowed: str):
-    """역할 게이트 — `Depends(require_role("ops_admin"))` 형태."""
+    """역할 게이트.
+
+    - `require_role("ops_admin")` 처럼 정확한 매칭 또는
+    - `require_role(min="ops_reviewer")` 형태(`min:` prefix)로 위계 사용.
+
+    P5 권한 매트릭스:
+    - ops_viewer  : 카탈로그 읽기
+    - ops_member  : 위 + 변경요청 발급, 자기 섹션 콘텐츠 편집(권한 부여 시)
+    - ops_reviewer: 위 + 콘텐츠 검토·게시(권한 부여 시), 헬스 모니터링
+    - ops_admin   : 위 + 매니페스트 sync, 담당자 지정, 감사 로그 조회, 모든 admin
+    """
+    minimum: str | None = None
+    exact: tuple[str, ...] = tuple()
+    for a in allowed:
+        if a.startswith("min:"):
+            minimum = a[4:]
+        else:
+            exact = exact + (a,)
 
     async def _checker(user: OpsUser = Depends(get_current_user)) -> OpsUser:
-        if user.role not in allowed:
+        ok = False
+        if exact and user.role in exact:
+            ok = True
+        if not ok and minimum and role_at_least(user, minimum):
+            ok = True
+        if not ok:
+            allowed_label = list(exact) + ([f">= {minimum}"] if minimum else [])
             raise HTTPException(
                 status.HTTP_403_FORBIDDEN,
-                f"role '{user.role}' 부족 — allowed: {allowed}",
+                f"role '{user.role}' 부족 — required: {allowed_label}",
             )
         return user
 

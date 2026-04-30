@@ -71,6 +71,7 @@ class Settings(BaseSettings):
     health_probe_concurrency: int = Field(default=10)
     health_probe_timeout_s: float = Field(default=8.0)
     health_probe_user_agent: str = Field(default="OpsConsole/0.1 (+https://opsconsole.unmong.com)")
+    health_probe_allow_private: bool = Field(default=False)  # dev 환경에서만 true (SSRF 방어 우회)
 
     @property
     def cors_origins_list(self) -> list[str]:
