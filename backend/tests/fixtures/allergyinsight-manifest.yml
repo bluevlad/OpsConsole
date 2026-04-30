@@ -1,0 +1,357 @@
+# AllergyInsight ops/manifest.yml — Seed (v1.0)
+#
+# 본 파일은 AllergyInsight 코드 저장소의 `ops/manifest.yml`로 복사될 시드.
+# 게이트웨이 랜딩 (frontend/src/pages/gateway-landing/GatewayLanding.jsx)의
+# FEATURES[] 11개 항목을 OpsConsole 매니페스트로 변환한 결과.
+#
+# 스키마: https://github.com/bluevlad/Claude-Opus-bluevlad/blob/main/standards/ops-console/manifest-schema.yml
+# 생성일: 2026-04-30
+# 검증된 코드 저장소 커밋: prod 브랜치 (1a5b375 기준)
+
+version: "1.0"
+service: allergyinsight
+display_name: AllergyInsight
+gateway_url: https://allergy.unmong.com
+repo_url: https://github.com/bluevlad/AllergyInsight
+
+contact:
+  primary_owner: rainend00@gmail.com
+  slack_channel: "#allergy-ops"
+
+publish_endpoint:
+  mode: polling
+  polling_endpoint: /api/internal/content/published
+
+sections:
+
+  # ① 🤖 AI 상담 -------------------------------------------------------------
+  - code: ai-consult
+    name: AI 상담
+    level: public
+    route: /ai/consult
+    status: live
+    owner: rainend00@gmail.com
+    description: "MLX EXAONE-3.5 + ChromaDB RAG 기반 논문 Q&A (10회/분 rate limit)"
+    assets:
+      frontend:
+        - frontend/src/pages/ai-consult/AIConsultPage.jsx
+      backend_router:
+        - backend/app/api/ai_consult_routes.py
+      service:
+        - backend/app/services/rag_service.py
+      tables:
+        - papers
+        - "chroma:papers_collection"
+      endpoints:
+        - POST /api/ai/consult/ask
+        - GET /api/ai/consult/allergens
+        - GET /api/ai/consult/questions/{allergen}
+    health:
+      url: https://allergy.unmong.com/ai/consult
+      api: /api/ai/consult/allergens
+    content_blocks:
+      - key: ai_consult.intro_banner
+        format: markdown
+        max_length: 2000
+        description: "AI 상담 페이지 상단 안내 배너"
+    tags: [ai, rag, public]
+
+  # ② 💡 AI 인사이트 ---------------------------------------------------------
+  - code: ai-insight
+    name: AI 인사이트
+    level: public
+    route: /ai/insight
+    status: live
+    owner: rainend00@gmail.com
+    description: "알러젠별 논문·뉴스·트렌드를 한 페이지에 집약한 공개 허브"
+    assets:
+      frontend:
+        - frontend/src/pages/ai-insight/AIInsightPage.jsx
+      backend_router:
+        - backend/app/api/ai_insight_routes.py
+      models:
+        - backend/app/database/analytics_models.py
+      tables:
+        - papers
+        - allergen_stats
+        - news_allergen_link
+        - keywords_by_year
+      endpoints:
+        - GET /api/ai/insight/overview
+        - GET /api/ai/insight/allergen/{allergen_code}
+        - GET /api/ai/insight/news
+    health:
+      url: https://allergy.unmong.com/ai/insight
+      api: /api/ai/insight/overview
+    tags: [analytics, public]
+
+  # ③ 📈 분석 대시보드 -------------------------------------------------------
+  - code: analytics
+    name: 분석 대시보드
+    level: public
+    route: /analytics
+    status: live
+    owner: rainend00@gmail.com
+    description: "종합 트렌드·알러젠 분석·논문 수집정보·알러젠뉴스 4개 공개 탭"
+    assets:
+      frontend:
+        - frontend/src/apps/analytics/AnalyticsApp.jsx
+        - frontend/src/apps/analytics/pages/ComprehensiveTrendPage.jsx
+        - frontend/src/apps/analytics/pages/AllergenAnalysisPage.jsx
+        - frontend/src/apps/analytics/pages/PaperCollectionPage.jsx
+        - frontend/src/apps/analytics/pages/AllergenNewsPage.jsx
+      backend_router:
+        - backend/app/api/analytics_routes.py
+      models:
+        - backend/app/database/analytics_models.py
+      tables:
+        - analytics_snapshots
+        - keyword_trends
+        - paper_allergen_trends
+        - news_allergen_links
+      endpoints:
+        - GET /api/public/analytics/overview
+        - GET /api/public/analytics/trend/{allergen_code}
+        - GET /api/public/analytics/papers/stats
+    health:
+      url: https://allergy.unmong.com/analytics
+      api: /api/public/analytics/overview
+    tags: [analytics, dashboard, public]
+
+  # ④ 📝 인사이트 리포트 -----------------------------------------------------
+  - code: insight-report
+    name: 인사이트 리포트
+    level: public
+    route: /analytics/insights
+    status: live
+    owner: rainend00@gmail.com
+    description: "매월 1일 03:00 자동 생성되는 알러젠별 AI 마크다운 리포트"
+    assets:
+      frontend:
+        - frontend/src/apps/analytics/pages/InsightListPage.jsx
+        - frontend/src/apps/analytics/pages/InsightDetailPage.jsx
+      backend_router:
+        - backend/app/api/analytics_routes.py
+      tables:
+        - allergen_insight_reports
+      endpoints:
+        - GET /api/public/analytics/insights
+        - GET /api/public/analytics/insights/{report_id}
+        - GET /api/public/analytics/insights/allergens
+    health:
+      url: https://allergy.unmong.com/analytics/insights
+      api: /api/public/analytics/insights
+    tags: [analytics, ai-generated, public]
+
+  # ⑤ 📄 알러지 리포트 -------------------------------------------------------
+  - code: allergy-report
+    name: 알러지 리포트
+    level: public
+    route: /report
+    status: live
+    owner: rainend00@gmail.com
+    description: "알러젠별 등급(0-6)과 환자 맞춤 관리 가이드를 한 번에 생성"
+    assets:
+      frontend:
+        - frontend/src/pages/report/AllergyReportPage.jsx
+      backend_router:
+        - backend/app/api/report_routes.py
+      service:
+        - backend/app/api/report_service.py
+      tables:
+        - prescriptions
+        - allergens
+        - food_substitutions
+      endpoints:
+        - POST /api/report/generate
+    health:
+      url: https://allergy.unmong.com/report
+    content_blocks:
+      - key: allergy_report.disclaimer
+        format: markdown
+        max_length: 3000
+        description: "리포트 하단 의학 면책 고지문"
+    tags: [report, public]
+
+  # ⑥ 📬 뉴스레터 ------------------------------------------------------------
+  - code: newsletter
+    name: 뉴스레터
+    level: public
+    route: /subscribe
+    status: live
+    owner: rainend00@gmail.com
+    description: "알러지 뉴스·논문·인사이트 주간 정기 구독 (이메일 인증)"
+    assets:
+      frontend:
+        - frontend/src/pages/subscribe/SubscribePage.jsx
+        - frontend/src/pages/subscribe/VerifyPage.jsx
+        - frontend/src/pages/subscribe/ManagePage.jsx
+        - frontend/src/pages/subscribe/UnsubscribePage.jsx
+      backend_router:
+        - backend/app/api/subscription_routes.py
+        - backend/app/api/public_newsletter_routes.py
+      models:
+        - backend/app/database/subscriber_models.py
+      tables:
+        - newsletter_subscribers
+        - email_verifications
+      endpoints:
+        - POST /api/subscribe
+        - POST /api/subscribe/verify
+        - PUT /api/subscribe/keywords
+    health:
+      url: https://allergy.unmong.com/subscribe
+    content_blocks:
+      - key: newsletter.welcome_template
+        format: markdown
+        max_length: 8000
+        description: "구독 확인 후 발송되는 환영 이메일 본문"
+      - key: newsletter.subscribe_intro
+        format: markdown
+        max_length: 1500
+        description: "구독 페이지 안내 문구"
+    tags: [newsletter, email, public]
+
+  # ⑦ 📚 Wiki ----------------------------------------------------------------
+  - code: wiki
+    name: Wiki
+    level: public
+    route: /wiki/
+    external: true
+    status: live
+    owner: rainend00@gmail.com
+    description: "아키텍처·API 명세·ADR·운영 가이드 MkDocs 문서"
+    assets:
+      frontend: []
+      tables: []
+    health:
+      url: https://allergy.unmong.com/wiki/
+    tags: [docs, public, external]
+
+  # ⑧ 🩺 Professional --------------------------------------------------------
+  - code: professional
+    name: Professional
+    level: member
+    route: /pro
+    status: live
+    owner: rainend00@gmail.com
+    description: "의료진 전용 콘솔 — 환자 관리·진단 입력·임상보고서·논문 검색·Q&A (7메뉴)"
+    assets:
+      frontend:
+        - frontend/src/apps/professional/ProApp.jsx
+        - frontend/src/apps/professional/pages/Dashboard.jsx
+        - frontend/src/apps/professional/pages/DiagnosisPage.jsx
+        - frontend/src/apps/professional/pages/PatientsPage.jsx
+        - frontend/src/apps/professional/pages/SearchPage.jsx
+        - frontend/src/apps/professional/pages/QAPage.jsx
+        - frontend/src/apps/professional/pages/PapersPage.jsx
+        - frontend/src/apps/professional/pages/ClinicalReportPage.jsx
+      backend_router:
+        - backend/app/professional/routes.py
+      models:
+        - backend/app/database/clinical_models.py
+      tables:
+        - users
+        - patient_profiles
+        - diagnosis_results
+        - clinical_reports
+      endpoints:
+        - GET /api/pro/patients
+        - POST /api/pro/diagnosis
+        - GET /api/pro/papers/search
+    health:
+      url: https://allergy.unmong.com/pro
+    tags: [professional, member, clinical]
+
+  # ⑨ 🧍 Consumer ------------------------------------------------------------
+  - code: consumer
+    name: Consumer
+    level: member
+    route: /app
+    status: live
+    owner: rainend00@gmail.com
+    description: "환자용 앱 — 내 검사결과·식품 가이드·생활 관리·응급 대처·키트 등록"
+    assets:
+      frontend:
+        - frontend/src/apps/consumer/ConsumerApp.jsx
+        - frontend/src/apps/consumer/pages/MyDiagnosisPage.jsx
+        - frontend/src/apps/consumer/pages/FoodGuidePage.jsx
+        - frontend/src/apps/consumer/pages/LifestylePage.jsx
+        - frontend/src/apps/consumer/pages/EmergencyPage.jsx
+        - frontend/src/apps/consumer/pages/KitRegisterPage.jsx
+      backend_router:
+        - backend/app/consumer/routes.py
+      tables:
+        - users
+        - diagnosis_results
+        - patient_subscriptions
+        - kit_registrations
+      endpoints:
+        - GET /api/consumer/my-diagnosis
+        - GET /api/consumer/food-guide/{allergen}
+        - POST /api/consumer/kit/register
+    health:
+      url: https://allergy.unmong.com/app
+    tags: [consumer, member, patient]
+
+  # ⑩ 🔐 관리자 -------------------------------------------------------------
+  - code: admin
+    name: 관리자
+    level: admin
+    route: /admin
+    status: live
+    owner: rainend00@gmail.com
+    description: "사용자·알러젠·논문·조직·경쟁사 뉴스·구독자 통합 운영 (super_admin)"
+    assets:
+      frontend:
+        - frontend/src/apps/admin/AdminApp.jsx
+        - frontend/src/apps/admin/pages/AdminDashboard.jsx
+        - frontend/src/apps/admin/pages/UsersPage.jsx
+        - frontend/src/apps/admin/pages/AllergensPage.jsx
+        - frontend/src/apps/admin/pages/PapersPage.jsx
+        - frontend/src/apps/admin/pages/OrganizationsPage.jsx
+        - frontend/src/apps/admin/pages/CompetitorNewsPage.jsx
+        - frontend/src/apps/admin/pages/SubscribersPage.jsx
+      backend_router:
+        - backend/app/admin/routes.py
+      tables:
+        - users
+        - allergens
+        - papers
+        - organizations
+        - competitor_news
+        - newsletter_subscribers
+      endpoints:
+        - GET /api/admin/users
+        - GET /api/admin/allergens
+        - GET /api/admin/papers
+    health:
+      url: https://allergy.unmong.com/admin
+    tags: [admin, super-admin]
+
+  # ⑪ 💊 약물 관리 (Phase 1) ------------------------------------------------
+  - code: drug-management
+    name: 약물 관리
+    level: admin
+    route: /admin/drugs
+    status: beta
+    owner: rainend00@gmail.com
+    description: "[NEW] 공개 약물 DB(openFDA·MFDS) 수집 + 병태생리 지식 그래프 감수 — Phase 1"
+    assets:
+      frontend:
+        - frontend/src/apps/admin/pages/DrugsPage.jsx
+      backend_router:
+        - backend/app/admin/drug_routes.py
+      models:
+        - backend/app/database/drug_models.py
+      tables:
+        - drug_entities
+        - drug_interactions
+        - pathophysiology_knowledge_graph
+      endpoints:
+        - POST /api/admin/drugs/sync/openfda
+        - POST /api/admin/drugs/sync/mfds
+        - POST /api/admin/drugs/kg/review
+    health:
+      url: https://allergy.unmong.com/admin/drugs
+    tags: [admin, drug, beta, phase1]
