@@ -1,0 +1,38 @@
+# OpsConsole — production / staging compose
+# 공유 PostgreSQL 컨테이너(별도 docker-compose)는 외부 네트워크 'unmong-shared'에 연결되어 있다고 가정.
+# DATABASE_URL은 .env에서 주입.
+version: "3.9"
+
+services:
+  opsconsole-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: opsconsole-backend:latest
+    container_name: opsconsole-backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      APP_ENV: ${APP_ENV:-prod}
+    ports:
+      - "9100:9100"
+    networks:
+      - unmong-shared
+
+  opsconsole-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: opsconsole-frontend:latest
+    container_name: opsconsole-frontend
+    restart: unless-stopped
+    depends_on:
+      - opsconsole-backend
+    ports:
+      - "4100:4100"
+    networks:
+      - unmong-shared
+
+networks:
+  unmong-shared:
+    external: true

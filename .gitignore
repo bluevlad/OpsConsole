@@ -1,0 +1,54 @@
+# --- Environment ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+*.egg-info/
+dist/
+build/
+
+# --- Node ---
+node_modules/
+.npm/
+.eslintcache
+.vite/
+frontend/dist/
+
+# --- IDE / OS ---
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Local artifacts ---
+*.log
+logs/
+local_data/
+*.sqlite3
+
+# --- Tauri (P4 이후) ---
+src-tauri/target/
+
+# --- Secrets / Signing ---
+*.pem
+*.p12
+*.key
+service-account*.json
