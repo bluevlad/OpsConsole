@@ -1,10 +1,8 @@
-"""OpsConsole FastAPI entrypoint.
-
-P0 §0 단계: /api/health 한 개만 우선 노출. 라우터 추가는 §2에서 진행.
-"""
+"""OpsConsole FastAPI entrypoint."""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.catalog import router as catalog_router
 from app.api.health import router as health_router
 from app.core.config import settings
 
@@ -25,6 +23,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(health_router, prefix="/api")
+    app.include_router(catalog_router, prefix="/api")
 
     return app
 
