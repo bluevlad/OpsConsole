@@ -14,6 +14,9 @@
 
 ## 주요 문서
 
+### 시스템 전체 파악 (먼저 읽으세요)
+- **[dev/overview.md](./dev/overview.md) — 30분 가이드: 아키텍처 / DB / API / 권한 / CI / 운영**
+
 ### 빠른 시작 / 셋업
 - [dev/quickstart.md](./dev/quickstart.md) — 로컬에서 OpsConsole 띄우기 (Docker compose / 호스트 직접 / 시드 / 트러블슈팅)
 - [dev/database-setup.md](./dev/database-setup.md) — DB·계정·pg_hba 항목 생성
