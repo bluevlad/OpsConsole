@@ -53,6 +53,7 @@ class Settings(BaseSettings):
     # --- GitHub (§2 sync / P2 bridge) ---
     github_pat: str = Field(default="")
     github_api_base: str = Field(default="https://api.github.com")
+    github_webhook_secret: str = Field(default="")  # P2 webhook HMAC-SHA256 검증
 
     # --- Slack (P1) ---
     slack_webhook_url: str = Field(default="")

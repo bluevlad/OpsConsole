@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ErrorBanner, Layout, Loading, Tag } from '../components/Layout.jsx';
 import { HealthSummaryCard } from '../components/Health.jsx';
-import { getSection, getService } from '../api/catalog.js';
+import { getSection, getService, listChangeRequests } from '../api/catalog.js';
 import { useAuth } from '../auth/AuthContext.jsx';
 
 const ASSET_TYPE_ORDER = ['frontend', 'backend_router', 'service', 'model', 'table', 'endpoint'];
@@ -28,6 +28,7 @@ export default function SectionDetailPage() {
   const { user } = useAuth();
   const [service, setService] = useState(null);
   const [data, setData] = useState(null);
+  const [crs, setCrs] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -37,7 +38,9 @@ export default function SectionDetailPage() {
         if (cancelled) return;
         setService(svc);
         setData(sec);
+        return listChangeRequests({ section_id: sec.id });
       })
+      .then((list) => { if (!cancelled) setCrs(list || []); })
       .catch((err) => {
         if (cancelled) return;
         const msg = err.response?.data?.detail || err.message || '섹션 상세 조회 실패';
@@ -107,6 +110,36 @@ export default function SectionDetailPage() {
               </p>
             </div>
           )}
+
+          <div className="card">
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+              <h2 style={{ margin: 0 }}>변경요청 ({crs?.length ?? '...'})</h2>
+              <Link className="btn primary" to={`/change-requests/new?service=${code}&section=${section}`}>
+                + 새 변경요청
+              </Link>
+            </div>
+            {crs && crs.length === 0 && (
+              <p className="muted" style={{ marginTop: 12, marginBottom: 0 }}>
+                아직 발급된 변경요청이 없습니다.
+              </p>
+            )}
+            {crs && crs.length > 0 && (
+              <ul style={{ margin: '12px 0 0', padding: 0, listStyle: 'none' }}>
+                {crs.slice(0, 10).map((cr) => (
+                  <li key={cr.id} style={{ padding: '6px 0', borderBottom: '1px solid var(--border)', display: 'flex', gap: 10, alignItems: 'baseline' }}>
+                    <span className="muted" style={{ fontSize: 12, minWidth: 32 }}>#{cr.id}</span>
+                    <span className={`tag cr-${cr.status}`}>{cr.status}</span>
+                    <Link to={`/change-requests/${cr.id}`} style={{ flex: 1 }}>{cr.title}</Link>
+                    {cr.github_issue_number && (
+                      <a href={cr.github_issue_url} target="_blank" rel="noreferrer" className="muted" style={{ fontSize: 12 }}>
+                        gh#{cr.github_issue_number}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
           <div className="card">
             <h2>자산 ({data.assets?.length || 0})</h2>

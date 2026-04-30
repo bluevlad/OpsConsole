@@ -124,6 +124,56 @@ class AssignmentRequest(BaseModel):
 # -- My sections ------------------------------------------------------------
 
 
+# -- Change Requests (P2) --------------------------------------------------
+
+
+class AttachmentDTO(BaseModel):
+    filename: str
+    url: str | None = None
+    size: int | None = None
+
+
+class ChangeRequestDTO(_OrmDTO):
+    id: int
+    section_id: int | None
+    section_code: str | None = None
+    service_code: str | None = None
+    requester_id: int
+    requester_email: str | None = None
+    title: str
+    description_md: str | None
+    status: str
+    priority: str
+    github_issue_url: str | None
+    github_issue_number: int | None
+    github_pr_url: str | None
+    github_pr_number: int | None
+    attachments: list[AttachmentDTO] | None
+    created_at: datetime
+    updated_at: datetime
+    closed_at: datetime | None
+
+
+class ChangeRequestCreateRequest(BaseModel):
+    """변경요청 신규 발급. section_id 가 있으면 GitHub Issue 자동 생성."""
+
+    section_id: int | None = None
+    title: str = Field(min_length=1, max_length=200)
+    description_md: str | None = None
+    priority: str = Field(default="normal", pattern=r"^(low|normal|high|urgent)$")
+    attachments: list[AttachmentDTO] | None = None
+    skip_github: bool = False  # True 면 Issue 발급 생략 (테스트/dry-run)
+
+
+class ChangeRequestPatchRequest(BaseModel):
+    title: str | None = None
+    description_md: str | None = None
+    priority: str | None = Field(default=None, pattern=r"^(low|normal|high|urgent)$")
+    status: str | None = Field(
+        default=None, pattern=r"^(submitted|in_pr|merged|closed|rejected)$"
+    )
+
+
 class MySectionDTO(_OrmDTO):
     """`/api/my/sections` 단일 행 — 내가 owner / backup / 권한 부여된 섹션."""
 

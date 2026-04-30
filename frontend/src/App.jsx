@@ -1,8 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthContext.jsx';
 import { RequireAuth } from './auth/RequireAuth.jsx';
+import ChangeRequestDetailPage from './pages/ChangeRequestDetailPage.jsx';
+import ChangeRequestNewPage from './pages/ChangeRequestNewPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import MyChangeRequestsPage from './pages/MyChangeRequestsPage.jsx';
 import MySectionsPage from './pages/MySectionsPage.jsx';
 import PermissionsPage from './pages/PermissionsPage.jsx';
 import SectionDetailPage from './pages/SectionDetailPage.jsx';
@@ -18,6 +21,18 @@ export default function App() {
         <Route
           path="/my/sections"
           element={<RequireAuth><MySectionsPage /></RequireAuth>}
+        />
+        <Route
+          path="/my/change-requests"
+          element={<RequireAuth><MyChangeRequestsPage /></RequireAuth>}
+        />
+        <Route
+          path="/change-requests/new"
+          element={<RequireAuth><ChangeRequestNewPage /></RequireAuth>}
+        />
+        <Route
+          path="/change-requests/:id"
+          element={<RequireAuth><ChangeRequestDetailPage /></RequireAuth>}
         />
         <Route
           path="/services"

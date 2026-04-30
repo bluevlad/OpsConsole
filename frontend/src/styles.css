@@ -215,3 +215,44 @@ code, .mono {
   margin: 12px 0;
   align-items: center;
 }
+
+/* -- P2 status pills ---------------------------------- */
+.tag.cr-submitted { color: var(--accent); border-color: rgba(91,139,255,0.4); }
+.tag.cr-in_pr     { color: var(--beta); border-color: rgba(169,134,238,0.4); }
+.tag.cr-merged    { color: var(--ok); border-color: rgba(62,199,141,0.4); }
+.tag.cr-closed    { color: var(--muted); }
+.tag.cr-rejected  { color: var(--err); border-color: rgba(226,91,91,0.4); }
+.tag.pri-urgent { color: var(--err); border-color: rgba(226,91,91,0.4); }
+.tag.pri-high   { color: var(--warn); border-color: rgba(231,169,72,0.4); }
+.tag.pri-normal { color: var(--muted); }
+.tag.pri-low    { color: var(--ok); border-color: rgba(62,199,141,0.4); }
+
+textarea.cr-md {
+  width: 100%;
+  min-height: 180px;
+  padding: 10px 12px;
+  background: var(--code-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: ui-monospace, "JetBrains Mono", Menlo, monospace;
+  font-size: 13px;
+  resize: vertical;
+}
+input.cr-text {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--code-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+}
+select.cr-sel {
+  padding: 6px 8px;
+  background: var(--code-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+}

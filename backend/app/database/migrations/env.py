@@ -13,6 +13,7 @@ from app.database.base import Base
 # Import models — autogenerate가 메타데이터를 인식하도록 모든 모델 등록
 from app.models import (  # noqa: F401
     audit,
+    change_request,
     health,
     permission,
     section,

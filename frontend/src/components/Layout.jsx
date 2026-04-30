@@ -18,6 +18,9 @@ export function Layout({ children, crumbs }) {
             <NavLink to="/my/sections" className={({ isActive }) => (isActive ? 'active' : '')}>
               My Sections
             </NavLink>
+            <NavLink to="/my/change-requests" className={({ isActive }) => (isActive ? 'active' : '')}>
+              Change Requests
+            </NavLink>
           </nav>
         )}
         <div style={{ marginLeft: 'auto', fontSize: 13 }}>

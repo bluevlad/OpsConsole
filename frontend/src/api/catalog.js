@@ -64,3 +64,25 @@ export async function getHealthSnapshots(serviceCode, sectionCode, limit = 50) {
   );
   return data;
 }
+
+// -- P2: Change Requests ---------------------------------------------------
+
+export async function listChangeRequests(params = {}) {
+  const { data } = await api.get('/api/change-requests', { params });
+  return data;
+}
+
+export async function getChangeRequest(id) {
+  const { data } = await api.get(`/api/change-requests/${id}`);
+  return data;
+}
+
+export async function createChangeRequest(payload) {
+  const { data } = await api.post('/api/change-requests', payload);
+  return data;
+}
+
+export async function patchChangeRequest(id, payload) {
+  const { data } = await api.patch(`/api/change-requests/${id}`, payload);
+  return data;
+}
