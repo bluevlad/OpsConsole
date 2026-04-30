@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Empty, ErrorBanner, Layout, Loading, Tag } from '../components/Layout.jsx';
+import { HealthDot } from '../components/Health.jsx';
 import { getService, listSections } from '../api/catalog.js';
 
 export default function SectionsListPage() {
@@ -76,17 +77,20 @@ export default function SectionsListPage() {
           <table>
             <thead>
               <tr>
+                <th style={{ width: 36 }}></th>
                 <th style={{ width: 180 }}>섹션 코드</th>
                 <th>표시명</th>
                 <th style={{ width: 90 }}>레벨</th>
                 <th style={{ width: 90 }}>상태</th>
                 <th style={{ width: 220 }}>담당자</th>
                 <th style={{ width: 90 }}>자산</th>
+                <th style={{ width: 200 }}>헬스</th>
               </tr>
             </thead>
             <tbody>
               {sections.map((sec) => (
                 <tr key={sec.id}>
+                  <td><HealthDot summary={sec.health} /></td>
                   <td>
                     <Link to={`/services/${code}/sections/${sec.code}`}>
                       <code>{sec.code}</code>
@@ -97,6 +101,7 @@ export default function SectionsListPage() {
                   <td><Tag kind="status" value={sec.status} /></td>
                   <td className="muted">{sec.owner_email || '—'}</td>
                   <td>{sec.assets?.length ?? 0}</td>
+                  <td><HealthDot summary={sec.health} withLabel /></td>
                 </tr>
               ))}
             </tbody>

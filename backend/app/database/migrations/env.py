@@ -10,8 +10,15 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from app.core.config import settings
 from app.database.base import Base
 
-# Import models — autogenerate가 메타데이터를 인식하도록 P0 §1에서 생성한 모델들 등록
-from app.models import audit, section, service, user  # noqa: F401  (side-effect: register tables)
+# Import models — autogenerate가 메타데이터를 인식하도록 모든 모델 등록
+from app.models import (  # noqa: F401
+    audit,
+    health,
+    permission,
+    section,
+    service,
+    user,
+)
 
 
 config = context.config

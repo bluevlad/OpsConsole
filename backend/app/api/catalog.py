@@ -19,6 +19,7 @@ from app.manifest.parser import ManifestParseError, parse_manifest
 from app.manifest.sync import upsert_catalog
 from app.models.section import OpsSection, OpsSectionAsset
 from app.models.service import OpsService
+from app.services.health_summary import summarize_for_sections
 
 router = APIRouter(prefix="/catalog", tags=["catalog"])
 
@@ -98,6 +99,8 @@ async def list_sections(
     for a in assets_rows:
         by_section.setdefault(a.section_id, []).append(a)
 
+    health_map = await summarize_for_sections(db, section_ids)
+
     result: list[SectionDTO] = []
     for s in sections:
         result.append(
@@ -107,6 +110,7 @@ async def list_sections(
                     "assets": [
                         SectionAssetDTO.model_validate(a) for a in by_section.get(s.id, [])
                     ],
+                    "health": health_map.get(s.id),
                 }
             )
         )
@@ -143,10 +147,13 @@ async def get_section(
         )
     ).scalars().all()
 
+    health_map = await summarize_for_sections(db, [section.id])
+
     return SectionDTO.model_validate(
         {
             **section.__dict__,
             "assets": [SectionAssetDTO.model_validate(a) for a in assets],
+            "health": health_map.get(section.id),
         }
     )
 

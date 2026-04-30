@@ -61,6 +61,13 @@ class Settings(BaseSettings):
     manifest_default_ref: str = Field(default="main")
     manifest_local_fallback_path: str = Field(default="")
 
+    # --- Scheduler / health probe (P1) ---
+    health_probe_enabled: bool = Field(default=True)
+    health_probe_interval_minutes: int = Field(default=5)
+    health_probe_concurrency: int = Field(default=10)
+    health_probe_timeout_s: float = Field(default=8.0)
+    health_probe_user_agent: str = Field(default="OpsConsole/0.1 (+https://opsconsole.unmong.com)")
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [o.strip() for o in self.backend_cors_origins.split(",") if o.strip()]

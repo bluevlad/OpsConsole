@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ErrorBanner, Layout, Loading, Tag } from '../components/Layout.jsx';
+import { HealthSummaryCard } from '../components/Health.jsx';
 import { getSection, getService } from '../api/catalog.js';
+import { useAuth } from '../auth/AuthContext.jsx';
 
 const ASSET_TYPE_ORDER = ['frontend', 'backend_router', 'service', 'model', 'table', 'endpoint'];
 
@@ -23,6 +25,7 @@ function groupAssets(assets) {
 
 export default function SectionDetailPage() {
   const { code, section } = useParams();
+  const { user } = useAuth();
   const [service, setService] = useState(null);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -91,6 +94,19 @@ export default function SectionDetailPage() {
               )}
             </dl>
           </div>
+
+          <HealthSummaryCard summary={data.health} />
+
+          {user?.role === 'ops_admin' && (
+            <div className="card">
+              <h2>권한 (ops_admin)</h2>
+              <p className="muted" style={{ margin: 0 }}>
+                <Link to={`/services/${code}/sections/${section}/permissions`}>
+                  → 권한 부여/해제
+                </Link>
+              </p>
+            </div>
+          )}
 
           <div className="card">
             <h2>자산 ({data.assets?.length || 0})</h2>

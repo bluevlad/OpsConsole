@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 
 export function Layout({ children, crumbs }) {
@@ -9,7 +9,17 @@ export function Layout({ children, crumbs }) {
     <div className="app">
       <header className="app-header">
         <h1><Link to="/" style={{ color: 'inherit' }}>OpsConsole</Link></h1>
-        <span className="subtitle">멀티 서비스 운영 콘솔 — P0 카탈로그</span>
+        <span className="subtitle">멀티 서비스 운영 콘솔</span>
+        {user && (
+          <nav>
+            <NavLink to="/services" className={({ isActive }) => (isActive ? 'active' : '')}>
+              Services
+            </NavLink>
+            <NavLink to="/my/sections" className={({ isActive }) => (isActive ? 'active' : '')}>
+              My Sections
+            </NavLink>
+          </nav>
+        )}
         <div style={{ marginLeft: 'auto', fontSize: 13 }}>
           {user ? (
             <>

@@ -3,6 +3,8 @@ import { AuthProvider } from './auth/AuthContext.jsx';
 import { RequireAuth } from './auth/RequireAuth.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import MySectionsPage from './pages/MySectionsPage.jsx';
+import PermissionsPage from './pages/PermissionsPage.jsx';
 import SectionDetailPage from './pages/SectionDetailPage.jsx';
 import SectionsListPage from './pages/SectionsListPage.jsx';
 import ServicesListPage from './pages/ServicesListPage.jsx';
@@ -14,6 +16,10 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
+          path="/my/sections"
+          element={<RequireAuth><MySectionsPage /></RequireAuth>}
+        />
+        <Route
           path="/services"
           element={<RequireAuth><ServicesListPage /></RequireAuth>}
         />
@@ -24,6 +30,10 @@ export default function App() {
         <Route
           path="/services/:code/sections/:section"
           element={<RequireAuth><SectionDetailPage /></RequireAuth>}
+        />
+        <Route
+          path="/services/:code/sections/:section/permissions"
+          element={<RequireAuth role="ops_admin"><PermissionsPage /></RequireAuth>}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
