@@ -3,7 +3,7 @@
 본 폴더는 **구현/운영 가이드(How)** 만 둡니다.
 
 전략·플랜·ADR·로드맵 등 의사결정 문서(Why/What)는 다른 위치에 있습니다:
-👉 [`Claude-Opus-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/services/opsconsole) (private)
+👉 [`Ai-Legacy-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Ai-Legacy-bluevlad/tree/main/services/opsconsole) (private)
 
 ## 구조
 

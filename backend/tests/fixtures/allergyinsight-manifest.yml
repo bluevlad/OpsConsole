@@ -4,7 +4,7 @@
 # 게이트웨이 랜딩 (frontend/src/pages/gateway-landing/GatewayLanding.jsx)의
 # FEATURES[] 11개 항목을 OpsConsole 매니페스트로 변환한 결과.
 #
-# 스키마: https://github.com/bluevlad/Claude-Opus-bluevlad/blob/main/standards/ops-console/manifest-schema.yml
+# 스키마: https://github.com/bluevlad/Ai-Legacy-bluevlad/blob/main/standards/ops-console/manifest-schema.yml
 # 생성일: 2026-04-30
 # 검증된 코드 저장소 커밋: prod 브랜치 (1a5b375 기준)
 

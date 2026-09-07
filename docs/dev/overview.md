@@ -295,7 +295,7 @@ GitHub 설정:
 
 ## 10. 변경 이력 (커밋 SHA 매핑)
 
-| Phase | OpsConsole 커밋 | Claude-Opus-bluevlad 커밋 |
+| Phase | OpsConsole 커밋 | Ai-Legacy-bluevlad 커밋 |
 |-------|----------------|---------------------------|
 | P0 부트스트랩 | `df1ec76` ~ `aaa329d` (7 commits) | `fd1cbdd` (전략 문서 신규) |
 | P0 잔여 (OAuth + 게이트웨이) | `f64911d` | `690abe5` (infra+registry) |
@@ -323,7 +323,7 @@ GitHub 설정:
 | 사고 대응 | [`runbook.md`](./runbook.md) |
 | DB 백업·복구 | [`backup-restore.md`](./backup-restore.md) |
 | OWASP 점검 | [`owasp-checklist.md`](./owasp-checklist.md) |
-| 전략·플랜·ADR | [`Claude-Opus-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/services/opsconsole) (private) |
+| 전략·플랜·ADR | [`Ai-Legacy-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Ai-Legacy-bluevlad/tree/main/services/opsconsole) (private) |
 
 ---
 

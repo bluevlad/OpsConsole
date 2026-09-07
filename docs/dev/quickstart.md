@@ -180,4 +180,4 @@ docker exec -it opsconsole-backend-dev python -m scripts.seed_allergyinsight
 - 매니페스트 업데이트 자동 sync (cron 또는 GitHub webhook)는 P2 GitHub Bridge.
 - 헬스 체크 잡(5분 주기 + Slack 알림)은 P1.
 
-전략·플랜 정본: [`Claude-Opus-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/services/opsconsole) (private)
+전략·플랜 정본: [`Ai-Legacy-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Ai-Legacy-bluevlad/tree/main/services/opsconsole) (private)

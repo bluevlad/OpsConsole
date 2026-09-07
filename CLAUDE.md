@@ -1,11 +1,11 @@
 # OpsConsole 프로젝트 설정
 
-> 3-머신 작업 환경(MacBook 편집·운영 / Desktop 터미널·AutoQA / Notebook TIPAIP2 격리) 규칙: [WORKSTATION_GUIDE.md](https://github.com/bluevlad/Claude-Opus-bluevlad/blob/main/infrastructure/environments/WORKSTATION_GUIDE.md) — 개인 서비스 편집은 MacBook 에서만, Desktop 은 pull-only
+> 3-머신 작업 환경(MacBook 편집·운영 / Desktop 터미널·AutoQA / Notebook TIPAIP2 격리) 규칙: [WORKSTATION_GUIDE.md](https://github.com/bluevlad/Ai-Legacy-bluevlad/blob/main/infrastructure/environments/WORKSTATION_GUIDE.md) — 개인 서비스 편집은 MacBook 에서만, Desktop 은 pull-only
 
 > Git-First Workflow는 `~/GIT/CLAUDE.md`에서 자동 상속됩니다.
 > 본 파일에는 OpsConsole 고유 설정만 작성합니다.
 >
-> **전략·플랜·ADR 정본**: [`Claude-Opus-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/services/opsconsole) (private)
+> **전략·플랜·ADR 정본**: [`Ai-Legacy-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Ai-Legacy-bluevlad/tree/main/services/opsconsole) (private)
 > 본 코드 저장소(public)에는 **구현 코드만** 둡니다.
 
 ## 프로젝트 개요
@@ -30,7 +30,7 @@
 - Frontend: **4100**
 - Backend: **9100**
 - 도메인: `https://opsconsole.unmong.com/` (게이트웨이)
-- `https://도메인:포트` 형식 금지 — Claude-Opus-bluevlad의 `standards/infrastructure/DOMAIN_MANAGEMENT.md` 준수
+- `https://도메인:포트` 형식 금지 — Ai-Legacy-bluevlad의 `standards/infrastructure/DOMAIN_MANAGEMENT.md` 준수
 
 ## 개발 환경
 
@@ -77,10 +77,10 @@ cd frontend && npm test
 
 1. **본 서비스(AllergyInsight 등) 침습 최소화** — 다른 서비스 레포에는 `ops/manifest.yml` 파일 1개만 추가. 그 외 코드 변경 금지.
 2. **운영 권한 분리** — OpsConsole의 `ops_admin`은 본 서비스의 `super_admin`과 별도 계정 모델. JWT 공유 절대 금지.
-3. **매니페스트 스키마 변경 금지** — 정본은 Claude-Opus-bluevlad `standards/ops-console/manifest-schema.yml`. 후방 호환만 허용 (필드 추가 ✅ / 삭제·이름 변경 ❌).
+3. **매니페스트 스키마 변경 금지** — 정본은 Ai-Legacy-bluevlad `standards/ops-console/manifest-schema.yml`. 후방 호환만 허용 (필드 추가 ✅ / 삭제·이름 변경 ❌).
 4. **Phase 진행 순서 준수** — P0(읽기전용)이 끝나기 전에 P3(콘텐츠 에디터)로 점프 금지.
 5. **시크릿 절대 커밋 금지** — `.env`, `*.pem`, `service-account*.json`, Tauri 서명 키 등은 `.gitignore` 등재 확인.
-6. **전략 문서 작성 위치** — 의사결정·분석·플랜·로드맵은 Claude-Opus-bluevlad에. 본 레포 `docs/`에는 **구현/운영 가이드(How)** 만.
+6. **전략 문서 작성 위치** — 의사결정·분석·플랜·로드맵은 Ai-Legacy-bluevlad에. 본 레포 `docs/`에는 **구현/운영 가이드(How)** 만.
 
 ### 주요 디렉토리
 
@@ -101,8 +101,8 @@ OpsConsole/
 
 - [README.md](./README.md) — 빠른 시작
 - [docs/dev/quickstart.md](./docs/dev/quickstart.md) — 로컬 실행 가이드 (P0 §4 작성 예정)
-- [Claude-Opus-bluevlad/services/opsconsole/](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/services/opsconsole) — 전략·플랜·ADR 정본
-- [Claude-Opus-bluevlad/standards/ops-console/](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/standards/ops-console) — 매니페스트 스키마 정본
+- [Ai-Legacy-bluevlad/services/opsconsole/](https://github.com/bluevlad/Ai-Legacy-bluevlad/tree/main/services/opsconsole) — 전략·플랜·ADR 정본
+- [Ai-Legacy-bluevlad/standards/ops-console/](https://github.com/bluevlad/Ai-Legacy-bluevlad/tree/main/standards/ops-console) — 매니페스트 스키마 정본
 
 ## 변경 이력
 

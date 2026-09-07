@@ -5,7 +5,7 @@
 > 🟢 **상태**: P0 (Foundation) 완료 — 카탈로그 read-only UI · 매니페스트 sync · Google OAuth.
 > 운영 도메인: https://opsconsole.unmong.com
 > 1호 고객: AllergyInsight (`allergy.unmong.com`) — 11섹션 카탈로그 가동 중.
-> 전략·플랜·ADR 정본: [`Claude-Opus-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/services/opsconsole) (private).
+> 전략·플랜·ADR 정본: [`Ai-Legacy-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Ai-Legacy-bluevlad/tree/main/services/opsconsole) (private).
 
 ---
 
@@ -77,8 +77,8 @@ OpsConsole/
 
 각 서비스 코드 저장소에 `ops/manifest.yml` 파일 1개만 두면 OpsConsole이 카탈로그를 자동 구성합니다.
 
-- 스키마 정본: [`standards/ops-console/manifest-schema.yml`](https://github.com/bluevlad/Claude-Opus-bluevlad/blob/main/standards/ops-console/manifest-schema.yml)
-- 1호 고객 시드: AllergyInsight 11섹션 — Claude-Opus-bluevlad 내 `services/allergyinsight/dev/ops-manifest-seed.yml`
+- 스키마 정본: [`standards/ops-console/manifest-schema.yml`](https://github.com/bluevlad/Ai-Legacy-bluevlad/blob/main/standards/ops-console/manifest-schema.yml)
+- 1호 고객 시드: AllergyInsight 11섹션 — Ai-Legacy-bluevlad 내 `services/allergyinsight/dev/ops-manifest-seed.yml`
 
 ## 로드맵
 
@@ -91,7 +91,7 @@ OpsConsole/
 | **P4** | Tauri 트레이 Agent | 📋 계획 |
 | **P5** | 권한·감사·배포 | 📋 계획 |
 
-전체 일정·플랜·ADR: [`Claude-Opus-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Claude-Opus-bluevlad/tree/main/services/opsconsole)
+전체 일정·플랜·ADR: [`Ai-Legacy-bluevlad/services/opsconsole/`](https://github.com/bluevlad/Ai-Legacy-bluevlad/tree/main/services/opsconsole)
 
 ## 라이선스
 

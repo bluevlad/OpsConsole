@@ -1,7 +1,7 @@
 """OpsConsole 매니페스트 Pydantic 스키마 (v1.0).
 
 스키마 정본:
-    Claude-Opus-bluevlad/standards/ops-console/manifest-schema.yml
+    Ai-Legacy-bluevlad/standards/ops-console/manifest-schema.yml
 
 후방호환만 허용 — 필드 추가 ✅, 삭제·이름 변경 ❌. 비호환 변경은 v2.0 분기.
 """
